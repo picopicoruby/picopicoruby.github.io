@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PicoPicoRuby</title>
+<meta name="description" content="PicoRuby でやっていることを自慢したり他のひとがやっていることを面白がったりする PicoRuby 互助会コミュニティ。月に一度オフラインで集まってわいわいやっています。">
+<meta property="og:title" content="PicoPicoRuby">
+<meta property="og:description" content="PicoRuby でやっていることを自慢したり他のひとがやっていることを面白がったりする PicoRuby 互助会コミュニティ。月に一度オフラインで集まってわいわいやっています。">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: #C5D5E5;
+    padding: 1rem 0.5rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    color: #E8E8E6;
+    min-height: 100vh;
+  }
+
+  .site {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #30302E;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #4F6611;
+  }
+
+  .header { position: relative; line-height: 0; }
+  .header svg { display: block; width: 100%; image-rendering: pixelated; }
+  .header .logo {
+    position: absolute;
+    /* Speech bubble white area: x:293-357 (64px), y:66-112 (46px) in SVG (640x200 viewBox)
+       Logo is 94x87 (aspect ~1.08). Fit at 41x38 inside bubble.
+       Positioned slightly above center for better visual balance. */
+    left: 47.7%;
+    top: 36%;
+    width: 6.4%;
+    height: auto;
+    object-fit: contain;
+    background: #FFFFFF;
+  }
+
+  .title-block {
+    background: #FBEAF0;
+    padding: 2.25rem 1rem 2rem;
+    text-align: center;
+    border-bottom: 4px solid #4F6611;
+  }
+  .title-block h1 {
+    margin: 0;
+    font-size: 38px;
+    line-height: 1.4;
+    color: #4B1528;
+    letter-spacing: 0.02em;
+    font-family: 'Silkscreen', ui-monospace, monospace;
+    font-weight: 700;
+  }
+
+  .section-label {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 10px;
+    color: #999;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section { padding: 0 1.5rem 1.5rem; }
+  .section.first { padding-top: 1.5rem; }
+
+  .about p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #E8E8E6;
+  }
+  .about p + p { margin-top: 0.75rem; }
+  .about strong { color: #D4537E; font-weight: 600; }
+
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 88px;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: transform 0.05s steps(1), box-shadow 0.05s steps(1);
+  }
+  .card:hover { transform: translate(-4px, -4px); }
+  .card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 transparent !important;
+  }
+  .card .icon-slot {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+  }
+  .card svg { image-rendering: pixelated; flex-shrink: 0; }
+  .card .icon-slot svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .card .body { flex: 1; }
+  .card .title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+  .card .sub { font-size: 12px; }
+  .card .arrow { font-family: ui-monospace, monospace; font-size: 14px; flex-shrink: 0; }
+
+  .card.meetup {
+    background: #FBEAF0;
+    border: 3px solid #E60012;
+    box-shadow: 4px 4px 0 #993556;
+  }
+  .card.meetup:hover { box-shadow: 8px 8px 0 #993556; }
+  .card.meetup .title { color: #4B1528; }
+  .card.meetup .sub { color: #993556; }
+  .card.meetup .arrow { color: #E60012; }
+
+  .card.discord {
+    background: #30302E;
+    border: 3px solid #5865F2;
+    box-shadow: 4px 4px 0 #3F47B8;
+  }
+  .card.discord:hover { box-shadow: 8px 8px 0 #3F47B8; }
+  .card.discord .title { color: #8B92FF; font-weight: 700; }
+  .card.discord .sub { color: #A0A8C0; }
+  .card.discord .arrow { color: #5865F2; }
+
+  .card.past {
+    background: #262624;
+    border: 3px solid #4A4A48;
+    box-shadow: 4px 4px 0 #1A1A18;
+  }
+  .card.past:hover { box-shadow: 8px 8px 0 #1A1A18; }
+  .card.past .title { color: #E8E8E6; }
+  .card.past .sub { color: #A8A8A6; }
+  .card.past .arrow { color: #A8A8A6; }
+
+  /* === Kiban kun: jump (3-frame: stand / crouch / jump-up) === */
+  .card.meetup .kiban-stand { display: block; }
+  .card.meetup .kiban-jump { display: none; }
+  .card.meetup .kiban-crouch { display: none; }
+  .card.meetup:hover .kiban-stand {
+    animation: kiban-stand-anim 1.0s steps(1) infinite;
+  }
+  .card.meetup:hover .kiban-jump {
+    animation: kiban-jump-anim 1.0s steps(1) infinite;
+    display: block;
+  }
+  .card.meetup:hover .kiban-crouch {
+    animation: kiban-crouch-anim 1.0s steps(1) infinite;
+    display: block;
+  }
+  @keyframes kiban-stand-anim {
+    0%, 64% { opacity: 0; }
+    65%, 100% { opacity: 1; }
+  }
+  @keyframes kiban-jump-anim {
+    0%, 14% { opacity: 0; }
+    15%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes kiban-crouch-anim {
+    0%, 14% { opacity: 1; }
+    15%, 49% { opacity: 0; }
+    50%, 64% { opacity: 1; }
+    65%, 100% { opacity: 0; }
+  }
+
+  /* === Discord: tokotoko walk (2-frame leg swap) === */
+  .card.discord .discord-frame-2 { display: none; }
+  .card.discord:hover .discord-frame-1 {
+    animation: discord-frame-1 0.6s steps(1) infinite;
+  }
+  .card.discord:hover .discord-frame-2 {
+    animation: discord-frame-2 0.6s steps(1) infinite;
+    display: block;
+  }
+  @keyframes discord-frame-1 {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes discord-frame-2 {
+    0%, 49% { opacity: 0; }
+    50%, 100% { opacity: 1; }
+  }
+
+  /* === Ruby kun: 2-frame snap (low closed feet / top open feet) === */
+  .card.past .ruby-normal { display: block; }
+  .card.past .ruby-low { display: none; }
+  .card.past .ruby-top { display: none; }
+  .card.past:hover .ruby-normal { display: none; }
+  .card.past:hover .ruby-low {
+    animation: ruby-low-anim 0.6s steps(1) infinite;
+    display: block;
+  }
+  .card.past:hover .ruby-top {
+    animation: ruby-top-anim 0.6s steps(1) infinite;
+    display: block;
+  }
+  @keyframes ruby-low-anim {
+    0%, 29% { opacity: 1; }
+    30%, 100% { opacity: 0; }
+  }
+  @keyframes ruby-top-anim {
+    0%, 29% { opacity: 0; }
+    30%, 100% { opacity: 1; }
+  }
+
+  .footer {
+    background: #4B1528;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: #F4C0D1;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="site">
+
+  <!-- HEADER -->
+  <div class="header">
+    <svg viewBox="0 0 640 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="640" height="40" fill="#7FA8D9"/>
+      <rect x="0" y="40" width="640" height="40" fill="#A0C0E5"/>
+      <rect x="0" y="80" width="640" height="40" fill="#C5DAEF"/>
+      <rect x="0" y="120" width="640" height="20" fill="#E0EBF5"/>
+      <rect x="0" y="140" width="640" height="60" fill="#85B570"/>
+      <g fill="#FBEAF0">
+        <rect x="58" y="8" width="2" height="2"/><rect x="155" y="14" width="2" height="2"/><rect x="247" y="6" width="2" height="2"/><rect x="412" y="11" width="2" height="2"/><rect x="488" y="22" width="2" height="2"/><rect x="611" y="9" width="2" height="2"/>
+      </g>
+      <g fill="#FBEAF0">
+        <rect x="32" y="24" width="14" height="3"/><rect x="28" y="27" width="22" height="3"/><rect x="32" y="30" width="14" height="3"/>
+        <rect x="84" y="62" width="22" height="3"/><rect x="76" y="65" width="38" height="3"/><rect x="68" y="68" width="54" height="6"/><rect x="76" y="74" width="38" height="3"/><rect x="84" y="77" width="22" height="3"/>
+        <rect x="178" y="34" width="10" height="2"/><rect x="174" y="36" width="18" height="3"/><rect x="178" y="39" width="10" height="2"/>
+        <rect x="318" y="58" width="20" height="3"/><rect x="312" y="61" width="32" height="4"/><rect x="306" y="65" width="44" height="4"/><rect x="312" y="69" width="32" height="3"/>
+        <rect x="402" y="38" width="18" height="3"/><rect x="412" y="41" width="14" height="2"/><rect x="394" y="43" width="44" height="5"/><rect x="388" y="48" width="56" height="6"/><rect x="396" y="54" width="42" height="3"/><rect x="402" y="57" width="22" height="2"/>
+        <rect x="464" y="76" width="12" height="2"/><rect x="460" y="78" width="20" height="3"/><rect x="464" y="81" width="12" height="2"/>
+        <rect x="510" y="14" width="16" height="2"/><rect x="504" y="16" width="28" height="3"/><rect x="500" y="19" width="36" height="4"/><rect x="506" y="23" width="24" height="2"/>
+        <rect x="572" y="92" width="10" height="2"/><rect x="568" y="94" width="18" height="3"/><rect x="572" y="97" width="10" height="2"/>
+        <rect x="606" y="46" width="18" height="3"/><rect x="600" y="49" width="30" height="4"/><rect x="606" y="53" width="18" height="3"/>
+      </g>
+      <g fill="#7C8FA8">
+        <polygon points="0,140 22,118 44,140"/><polygon points="34,140 78,102 122,140"/><polygon points="108,140 142,124 176,140"/><polygon points="158,140 210,98 262,140"/><polygon points="248,140 282,116 316,140"/><polygon points="296,140 354,106 412,140"/><polygon points="390,140 422,122 454,140"/><polygon points="438,140 482,100 526,140"/><polygon points="510,140 548,118 586,140"/><polygon points="574,140 614,108 640,140"/>
+      </g>
+      <g fill="#5B6E89">
+        <polygon points="0,140 38,128 76,140"/><polygon points="60,140 96,116 132,140"/><polygon points="118,140 168,124 218,140"/><polygon points="200,140 244,118 288,140"/><polygon points="270,140 318,128 366,140"/><polygon points="350,140 396,114 442,140"/><polygon points="424,140 466,126 508,140"/><polygon points="490,140 540,118 590,140"/><polygon points="572,140 608,128 640,140"/>
+      </g>
+      <rect x="0" y="140" width="640" height="2" fill="#4F6611"/>
+      <g>
+        <rect x="38" y="172" width="6" height="24" fill="#854F0B"/><rect x="28" y="148" width="26" height="6" fill="#3B6D11"/><rect x="22" y="154" width="38" height="14" fill="#3B6D11"/><rect x="28" y="168" width="26" height="6" fill="#3B6D11"/><rect x="32" y="156" width="6" height="6" fill="#639922"/>
+      </g>
+      <!-- Mushroom (no gap between cap and stem) -->
+      <g>
+        <rect x="540" y="170" width="20" height="6" fill="#E60012"/>
+        <rect x="536" y="176" width="28" height="6" fill="#E60012"/>
+        <rect x="540" y="178" width="4" height="2" fill="#FBEAF0"/>
+        <rect x="554" y="178" width="4" height="2" fill="#FBEAF0"/>
+        <rect x="540" y="182" width="20" height="14" fill="#FBEAF0"/>
+      </g>
+      <!-- White interior of speech bubble (precisely shaped, no bleed) -->
+      <g fill="#FFFFFF">
+        <!-- Top row inside (y:63-66, between top line and corner pixels) -->
+        <rect x="296" y="63" width="58" height="3"/>
+        <!-- Main interior (y:66-112) -->
+        <rect x="293" y="66" width="64" height="46"/>
+        <!-- Bottom row inside (y:112-115) -->
+        <rect x="296" y="112" width="58" height="3"/>
+      </g>
+      <!-- Black outline on top -->
+      <g fill="#1a1a1a">
+        <rect x="296" y="60" width="58" height="3"/><rect x="296" y="115" width="58" height="3"/>
+        <rect x="290" y="66" width="3" height="46"/><rect x="357" y="66" width="3" height="46"/>
+        <rect x="293" y="63" width="3" height="3"/><rect x="354" y="63" width="3" height="3"/>
+        <rect x="293" y="112" width="3" height="3"/><rect x="354" y="112" width="3" height="3"/>
+      </g>
+      <g fill="#1a1a1a">
+        <rect x="297" y="118" width="9" height="3"/><rect x="294" y="121" width="9" height="3"/><rect x="291" y="124" width="9" height="3"/>
+      </g>
+      <g fill="#FFFFFF">
+        <rect x="297" y="118" width="6" height="3"/><rect x="294" y="121" width="6" height="3"/><rect x="291" y="124" width="6" height="3"/>
+      </g>
+      <rect x="297" y="115" width="6" height="3" fill="#FFFFFF"/>
+      <g transform="translate(260, 160) scale(2.5)">
+        <rect x="6" y="0" width="4" height="1" fill="#E60012"/><rect x="5" y="1" width="6" height="1" fill="#E60012"/><rect x="4" y="2" width="8" height="1" fill="#E60012"/>
+        <rect x="6" y="1" width="1" height="1" fill="#FFFFFF"/><rect x="9" y="1" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="4" y="3" width="8" height="3" fill="#FAC775"/>
+        <rect x="5" y="4" width="2" height="2" fill="#FFFFFF"/><rect x="9" y="4" width="2" height="2" fill="#FFFFFF"/>
+        <rect x="6" y="4" width="1" height="1" fill="#1a1a1a"/><rect x="10" y="4" width="1" height="1" fill="#1a1a1a"/>
+        <rect x="2" y="6" width="12" height="8" fill="#3B6D11"/>
+        <rect x="5" y="6" width="6" height="1" fill="#888"/>
+        <rect x="3" y="8" width="1" height="1" fill="#FAC775"/><rect x="3" y="10" width="1" height="1" fill="#FAC775"/><rect x="3" y="12" width="1" height="1" fill="#FAC775"/>
+        <rect x="12" y="8" width="1" height="1" fill="#FAC775"/><rect x="12" y="10" width="1" height="1" fill="#FAC775"/><rect x="12" y="12" width="1" height="1" fill="#FAC775"/>
+        <rect x="6" y="9" width="4" height="3" fill="#1a1a1a"/>
+        <rect x="7" y="10" width="2" height="1" fill="#E60012"/>
+        <rect x="4" y="14" width="2" height="2" fill="#1a1a1a"/><rect x="10" y="14" width="2" height="2" fill="#1a1a1a"/>
+      </g>
+      <g transform="translate(320, 160) scale(2.5)">
+        <rect x="4" y="0" width="8" height="1" fill="#E60012"/><rect x="3" y="1" width="10" height="1" fill="#E60012"/><rect x="2" y="2" width="12" height="1" fill="#E60012"/><rect x="1" y="3" width="14" height="6" fill="#E60012"/><rect x="2" y="9" width="12" height="1" fill="#E60012"/><rect x="3" y="10" width="10" height="1" fill="#E60012"/><rect x="4" y="11" width="8" height="1" fill="#E60012"/><rect x="5" y="12" width="6" height="1" fill="#E60012"/><rect x="6" y="13" width="4" height="1" fill="#E60012"/>
+        <rect x="3" y="2" width="1" height="1" fill="#FFFFFF"/><rect x="12" y="2" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="4" y="4" width="2" height="2" fill="#1a1a1a"/><rect x="10" y="4" width="2" height="2" fill="#1a1a1a"/>
+        <rect x="4" y="4" width="1" height="1" fill="#FFFFFF"/><rect x="10" y="4" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="2" y="6" width="2" height="1" fill="#F09595"/><rect x="12" y="6" width="2" height="1" fill="#F09595"/>
+        <rect x="6" y="7" width="1" height="1" fill="#1a1a1a"/><rect x="9" y="7" width="1" height="1" fill="#1a1a1a"/>
+        <rect x="7" y="8" width="1" height="1" fill="#1a1a1a"/><rect x="8" y="8" width="1" height="1" fill="#1a1a1a"/>
+        <rect x="4" y="14" width="3" height="2" fill="#1a1a1a"/><rect x="9" y="14" width="3" height="2" fill="#1a1a1a"/>
+      </g>
+      <g fill="#3B6D11">
+        <rect x="74" y="162" width="4" height="4"/><rect x="142" y="168" width="4" height="4"/><rect x="208" y="158" width="4" height="4"/><rect x="382" y="170" width="4" height="4"/><rect x="448" y="162" width="4" height="4"/><rect x="496" y="172" width="4" height="4"/><rect x="608" y="158" width="4" height="4"/>
+      </g>
+    </svg>
+    <img class="logo" src="logo.png" alt="Pico">
+  </div>
+
+  <!-- TITLE -->
+  <div class="title-block">
+    <h1>PicoPicoRuby</h1>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section first about">
+    <div class="section-label">▼ ABOUT</div>
+    <p>PicoPicoRuby は、PicoRuby でやっていることを自慢したり、他のひとがやっていることを面白がったりする <strong>PicoRuby 互助会コミュニティ</strong>です。</p>
+    <p>月に一度、第三または第四水曜日にオフラインで集まっています。作ったものを自慢しに来てもいいし、作業しに来てもいいし、おしゃべりしに来てもいいです。お気軽にどうぞ。</p>
+  </div>
+
+  <!-- MEETUP -->
+  <div class="section">
+    <div class="section-label">▼ MEETUP</div>
+    <a class="card meetup" href="https://picopicoruby.connpass.com/" target="_blank" rel="noopener">
+      <div class="icon-slot">
+        <svg class="kiban-stand" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="0" width="4" height="1" fill="#E60012"/><rect x="5" y="1" width="6" height="1" fill="#E60012"/><rect x="4" y="2" width="8" height="1" fill="#E60012"/>
+          <rect x="6" y="1" width="1" height="1" fill="#FFFFFF"/><rect x="9" y="1" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="4" y="3" width="8" height="3" fill="#FAC775"/>
+          <rect x="5" y="4" width="2" height="2" fill="#FFFFFF"/><rect x="9" y="4" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="6" y="4" width="1" height="1" fill="#1a1a1a"/><rect x="10" y="4" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="2" y="6" width="12" height="8" fill="#3B6D11"/>
+          <rect x="5" y="6" width="6" height="1" fill="#888"/>
+          <rect x="3" y="8" width="1" height="1" fill="#FAC775"/><rect x="3" y="10" width="1" height="1" fill="#FAC775"/><rect x="3" y="12" width="1" height="1" fill="#FAC775"/>
+          <rect x="12" y="8" width="1" height="1" fill="#FAC775"/><rect x="12" y="10" width="1" height="1" fill="#FAC775"/><rect x="12" y="12" width="1" height="1" fill="#FAC775"/>
+          <rect x="6" y="9" width="4" height="3" fill="#1a1a1a"/>
+          <rect x="7" y="10" width="2" height="1" fill="#E60012"/>
+          <rect x="4" y="14" width="2" height="2" fill="#1a1a1a"/><rect x="10" y="14" width="2" height="2" fill="#1a1a1a"/>
+        </svg>
+        <svg class="kiban-crouch" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="2" width="4" height="1" fill="#E60012"/><rect x="5" y="3" width="6" height="1" fill="#E60012"/><rect x="4" y="4" width="8" height="1" fill="#E60012"/>
+          <rect x="6" y="3" width="1" height="1" fill="#FFFFFF"/><rect x="9" y="3" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="4" y="5" width="8" height="3" fill="#FAC775"/>
+          <rect x="5" y="6" width="2" height="2" fill="#FFFFFF"/><rect x="9" y="6" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="6" y="6" width="1" height="1" fill="#1a1a1a"/><rect x="10" y="6" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="2" y="8" width="12" height="7" fill="#3B6D11"/>
+          <rect x="5" y="8" width="6" height="1" fill="#888"/>
+          <rect x="3" y="10" width="1" height="1" fill="#FAC775"/><rect x="3" y="12" width="1" height="1" fill="#FAC775"/>
+          <rect x="12" y="10" width="1" height="1" fill="#FAC775"/><rect x="12" y="12" width="1" height="1" fill="#FAC775"/>
+          <rect x="6" y="11" width="4" height="3" fill="#1a1a1a"/>
+          <rect x="7" y="12" width="2" height="1" fill="#E60012"/>
+          <rect x="4" y="15" width="2" height="1" fill="#1a1a1a"/><rect x="10" y="15" width="2" height="1" fill="#1a1a1a"/>
+        </svg>
+        <svg class="kiban-jump" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(0, -5)">
+            <rect x="6" y="0" width="4" height="1" fill="#E60012"/><rect x="5" y="1" width="6" height="1" fill="#E60012"/><rect x="4" y="2" width="8" height="1" fill="#E60012"/>
+            <rect x="6" y="1" width="1" height="1" fill="#FFFFFF"/><rect x="9" y="1" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="4" y="3" width="8" height="3" fill="#FAC775"/>
+            <rect x="5" y="4" width="2" height="2" fill="#FFFFFF"/><rect x="9" y="4" width="2" height="2" fill="#FFFFFF"/>
+            <rect x="6" y="5" width="1" height="1" fill="#1a1a1a"/><rect x="10" y="5" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="6" width="12" height="8" fill="#3B6D11"/>
+            <rect x="5" y="6" width="6" height="1" fill="#888"/>
+            <rect x="3" y="8" width="1" height="1" fill="#FAC775"/><rect x="3" y="10" width="1" height="1" fill="#FAC775"/><rect x="3" y="12" width="1" height="1" fill="#FAC775"/>
+            <rect x="12" y="8" width="1" height="1" fill="#FAC775"/><rect x="12" y="10" width="1" height="1" fill="#FAC775"/><rect x="12" y="12" width="1" height="1" fill="#FAC775"/>
+            <rect x="6" y="9" width="4" height="3" fill="#1a1a1a"/>
+            <rect x="7" y="10" width="2" height="1" fill="#E60012"/>
+            <rect x="4" y="14" width="2" height="3" fill="#1a1a1a"/><rect x="10" y="14" width="2" height="3" fill="#1a1a1a"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="title">ミートアップ</div>
+        <div class="sub">PicoRuby でピコピコ</div>
+      </div>
+      <div class="arrow">▶</div>
+    </a>
+  </div>
+
+  <!-- DISCORD -->
+  <div class="section">
+    <div class="section-label">▼ JOIN THE PARTY</div>
+    <a class="card discord" href="https://discord.gg/eA34gZzTvv" target="_blank" rel="noopener">
+      <div class="icon-slot">
+        <svg class="discord-frame-1" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="10" height="9" fill="#5865F2"/>
+          <rect x="2" y="4" width="12" height="7" fill="#5865F2"/>
+          <rect x="5" y="6" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="9" y="6" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="4" y="12" width="3" height="3" fill="#5865F2"/>
+          <rect x="9" y="12" width="3" height="2" fill="#5865F2"/>
+        </svg>
+        <svg class="discord-frame-2" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="10" height="9" fill="#5865F2"/>
+          <rect x="2" y="4" width="12" height="7" fill="#5865F2"/>
+          <rect x="5" y="6" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="9" y="6" width="2" height="2" fill="#FFFFFF"/>
+          <rect x="4" y="12" width="3" height="2" fill="#5865F2"/>
+          <rect x="9" y="12" width="3" height="3" fill="#5865F2"/>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="title">Discord</div>
+        <div class="sub">雑談・相談部屋</div>
+      </div>
+      <div class="arrow">▶</div>
+    </a>
+  </div>
+
+  <!-- PAST EVENTS -->
+  <div class="section">
+    <div class="section-label">▼ PAST KAIGIS</div>
+    <a class="card past" href="https://naniwarb.github.io/picorubyoverflowkaigi/" target="_blank" rel="noopener">
+      <div class="icon-slot">
+        <svg class="ruby-normal" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="0" width="8" height="1" fill="#E60012"/><rect x="3" y="1" width="10" height="1" fill="#E60012"/><rect x="2" y="2" width="12" height="1" fill="#E60012"/><rect x="1" y="3" width="14" height="6" fill="#E60012"/><rect x="2" y="9" width="12" height="1" fill="#E60012"/><rect x="3" y="10" width="10" height="1" fill="#E60012"/><rect x="4" y="11" width="8" height="1" fill="#E60012"/><rect x="5" y="12" width="6" height="1" fill="#E60012"/><rect x="6" y="13" width="4" height="1" fill="#E60012"/>
+          <rect x="3" y="2" width="1" height="1" fill="#FFFFFF"/><rect x="12" y="2" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="4" y="4" width="2" height="2" fill="#1a1a1a"/><rect x="10" y="4" width="2" height="2" fill="#1a1a1a"/>
+          <rect x="4" y="4" width="1" height="1" fill="#FFFFFF"/><rect x="10" y="4" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="2" y="6" width="2" height="1" fill="#F09595"/><rect x="12" y="6" width="2" height="1" fill="#F09595"/>
+          <rect x="6" y="7" width="1" height="1" fill="#1a1a1a"/><rect x="9" y="7" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="7" y="8" width="1" height="1" fill="#1a1a1a"/><rect x="8" y="8" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="4" y="14" width="3" height="2" fill="#1a1a1a"/><rect x="9" y="14" width="3" height="2" fill="#1a1a1a"/>
+        </svg>
+
+        <!-- LOW: kya face, feet closed (ground) -->
+        <svg class="ruby-low" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="0" width="8" height="1" fill="#E60012"/><rect x="3" y="1" width="10" height="1" fill="#E60012"/><rect x="2" y="2" width="12" height="1" fill="#E60012"/><rect x="1" y="3" width="14" height="6" fill="#E60012"/><rect x="2" y="9" width="12" height="1" fill="#E60012"/><rect x="3" y="10" width="10" height="1" fill="#E60012"/><rect x="4" y="11" width="8" height="1" fill="#E60012"/><rect x="5" y="12" width="6" height="1" fill="#E60012"/><rect x="6" y="13" width="4" height="1" fill="#E60012"/>
+          <rect x="3" y="2" width="1" height="1" fill="#FFFFFF"/><rect x="12" y="2" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="4" y="4" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="5" y="5" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="4" y="6" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="11" y="4" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="10" y="5" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="11" y="6" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="2" y="6" width="2" height="2" fill="#F09595"/><rect x="12" y="6" width="2" height="2" fill="#F09595"/>
+          <rect x="6" y="9" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="7" y="10" width="2" height="1" fill="#1a1a1a"/>
+          <rect x="9" y="9" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="4" y="14" width="3" height="2" fill="#1a1a1a"/><rect x="9" y="14" width="3" height="2" fill="#1a1a1a"/>
+        </svg>
+
+        <!-- TOP: kya face, 4px up, feet open wide -->
+        <svg class="ruby-top" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(0, -4)">
+            <rect x="4" y="0" width="8" height="1" fill="#E60012"/><rect x="3" y="1" width="10" height="1" fill="#E60012"/><rect x="2" y="2" width="12" height="1" fill="#E60012"/><rect x="1" y="3" width="14" height="6" fill="#E60012"/><rect x="2" y="9" width="12" height="1" fill="#E60012"/><rect x="3" y="10" width="10" height="1" fill="#E60012"/><rect x="4" y="11" width="8" height="1" fill="#E60012"/><rect x="5" y="12" width="6" height="1" fill="#E60012"/><rect x="6" y="13" width="4" height="1" fill="#E60012"/>
+            <rect x="3" y="2" width="1" height="1" fill="#FFFFFF"/><rect x="12" y="2" width="1" height="1" fill="#FFFFFF"/>
+            <rect x="4" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="5" y="5" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="4" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="11" y="4" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="10" y="5" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="11" y="6" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="6" width="2" height="2" fill="#F09595"/><rect x="12" y="6" width="2" height="2" fill="#F09595"/>
+            <rect x="6" y="9" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="7" y="10" width="2" height="1" fill="#1a1a1a"/>
+            <rect x="9" y="9" width="1" height="1" fill="#1a1a1a"/>
+            <rect x="2" y="14" width="2" height="2" fill="#1a1a1a"/><rect x="12" y="14" width="2" height="2" fill="#1a1a1a"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="title">これまでのカイギ</div>
+        <div class="sub">PicoRuby Overflow 会議</div>
+      </div>
+      <div class="arrow">▶</div>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>#picopicoruby</span>
+    <span>● ● ●</span>
+  </div>
+
+</div>
+
+<script>
+  // === Piko sound effect on card hover ===
+  let pikoAudioCtx = null;
+
+  function initPikoAudio() {
+    if (!pikoAudioCtx) {
+      try {
+        pikoAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {
+        return;
+      }
+    }
+    if (pikoAudioCtx.state === 'suspended') {
+      pikoAudioCtx.resume();
+    }
+  }
+
+  // Initialize on first user interaction (required by browsers)
+  // Try various events - some browsers accept different ones
+  const initEvents = ['click', 'touchstart', 'pointerdown', 'mousedown', 'keydown', 'mousemove', 'pointermove', 'mouseover'];
+  initEvents.forEach(evt => {
+    document.addEventListener(evt, initPikoAudio, { once: false, passive: true });
+  });
+
+  function pikoNote(freq, duration, volume, startOffset, freqEnd) {
+    if (!pikoAudioCtx || pikoAudioCtx.state !== 'running') return;
+    const osc = pikoAudioCtx.createOscillator();
+    const gain = pikoAudioCtx.createGain();
+    osc.type = 'square';
+    const start = pikoAudioCtx.currentTime + startOffset;
+    osc.frequency.setValueAtTime(freq, start);
+    if (freqEnd) {
+      osc.frequency.exponentialRampToValueAtTime(freqEnd, start + duration);
+    }
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(volume, start + 0.001);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(gain).connect(pikoAudioCtx.destination);
+    osc.start(start);
+    osc.stop(start + duration);
+  }
+
+  function playPiko() {
+    if (!pikoAudioCtx || pikoAudioCtx.state !== 'running') return;
+    // Famicom-style: ぴ(700Hz) + 100ms gap + こ(1700→1500Hz)
+    pikoNote(700, 0.010, 0.05, 0);
+    pikoNote(1700, 0.10, 0.08, 0.110, 1500);
+  }
+
+  // Attach hover listener to all cards
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', playPiko);
+  });
+</script>
+
+</body>
+</html>
